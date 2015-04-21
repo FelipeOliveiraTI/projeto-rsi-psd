@@ -6,16 +6,19 @@ import pika
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
 channel = connection.channel()
 
-#Criando uma fila, apesar de ter sido criado a fila no  programa send.py
-#Temos que ter a certeza que a fila existe se nao a mensagem e perdida
+# Criando uma fila, apesar de ter sido criado a fila no  programa send.py
+# Temos que ter a certeza que a fila existe se nao a mensagem e perdida
 channel.queue_declare(queue='Fila_Mensagens')
 
-#Recebendo Mensagens da fila
+# Recebendo Mensagens da fila
+# A biblioteca Pika faz a chamada da funcao callback sempre que recebe 
+# uma mensagem.
+
 def callback(ch, method, properties, body):
 	print "[x] Received %r" %(body,)
 
-# Informando ao Servidor RabbitMQ que a funcao callback deve reeceber
-# as mensagens da fila 'Fila_Mensagens'
+# Informando ao Servidor RabbitMQ que a funcao callback deve receber
+# as mensagens da 'Fila_Mensagens'
 
 channel.basic_consume(callback, queue='Fila_Mensagens', no_ack=True)
 
